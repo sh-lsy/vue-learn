@@ -1,2 +1,3 @@
-# vue-learn
-对vue的学习和部分个人想法记录
+# vue3-ts-vite-template
+
+vue3-ts-vite-ant 项目模板
