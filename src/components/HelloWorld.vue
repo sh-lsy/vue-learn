@@ -5,10 +5,16 @@
   <a-button type="primary" @click="setVal">Primary</a-button>
   {{ value }}
   <a-cascader v-model:value="value" :options="options" placeholder="Please select"  change-on-select/>
+  <div class="f">
+    1221
+    <div class="c">111</div>
+    <div><SmileOutlined /></div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { useStore } from 'vuex'
+import { SmileOutlined } from '@ant-design/icons-vue'
 import { ref, defineProps, onMounted,reactive } from 'vue'
   defineProps({
     msg: {
@@ -89,20 +95,16 @@ import { ref, defineProps, onMounted,reactive } from 'vue'
   }
 </script>
 
-<style scoped>
-a {
-  color: #42b983;
-}
+<style scoped lang="less">
 
 label {
   margin: 0 0.5em;
   font-weight: bold;
 }
-
-code {
-  background-color: #eee;
-  padding: 2px 4px;
-  border-radius: 4px;
-  color: #304455;
+.f {
+  color: red;
+  .c {
+    color: blue;
+  }
 }
 </style>

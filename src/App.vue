@@ -1,6 +1,11 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+  <div>
+    <img alt="Vue logo" src="./assets/logo.png" />
+    <div class="btn-wra">
+      <a-button v-for="(item, index) in data.msg" :type="data.activeNum === index ? 'primary' : ''" :key="item.title" @click="toRoute(item.routerName, index)">{{ item.title }}</a-button>
+    </div>
+    <router-view />
+  </div>
 </template>
 
 <!-- 老式写法 -->
@@ -16,7 +21,29 @@ export default defineComponent({
 })
 </script> -->
 <script lang="ts" setup>
-import HelloWorld from './components/HelloWorld.vue'
+  import { reactive } from 'vue'
+  import { useRouter } from "vue-router";
+  const data = reactive({
+    activeNum: 0,
+    msg: [
+      {
+        title: '首页',
+        routerName: "Home"
+      },
+      {
+        title: '关于',
+        routerName: "about"
+      }
+    ]
+  })
+  const router = useRouter();
+  function toRoute(name: string, index: number) {
+    
+    router.push({
+      name
+    })
+    data.activeNum = index
+  }
 
 </script>
 
@@ -28,5 +55,12 @@ import HelloWorld from './components/HelloWorld.vue'
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.btn-wra {
+  margin: 0 auto;
+  width: 150px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
