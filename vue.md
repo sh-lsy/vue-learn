@@ -118,16 +118,18 @@ Object.defineProperty(obj2,'x',{
 
     ```js
     vm.$watch('isHot',{
-        immediate:true, //初始化时让handler调用一下
         handler(newValue,oldValue){
         console.log('isHot被修改了',newValue,oldValue)
         }
     })
     ```
-
     
 
-- 深度监视
+- 立即执行（immediate）
+
+  配置immediate:true, //初始化时让handler调用一下
+
+- 深度监视（deep）
 
   配置deep:true可以监测对象内部值改变（多层)
 
@@ -148,3 +150,68 @@ Object.defineProperty(obj2,'x',{
 
 - computed能完成的功能，watch都可以完成
 - watch能完成的功能，computed不一定能完成，例如：watch可以进行异步操作
+
+#### 绑定样式
+
+- class
+  - :class="classname"  
+    - 字符串写法适用于：类名不确定，要动态获取
+  - :class="['classname1', 'classname2']" 
+    - 象写法适用于：要绑定的样式个数不确定、名字也不确定
+  - :class="{classname: true}"
+    - 对象写法适用于：要绑定的样式个数确定、名字也确定，但要动态决定用不用
+
+字符串，数组，对象可以通过vm去管理
+
+- style
+  - :style="{fontSize: 40px;}"
+    - 对象写法，font-size写成驼峰形式或加引号
+  - :style="[{fontSize: 40px;},{backgroundColor:'gray' }]"
+    - 数组写法
+
+数组，对象可以通过vm去管理
+
+#### 条件渲染
+
+- v-if
+  - v-if="表达式" 
+  - v-else-if="表达式"
+  - v-else
+
+- v-show
+  - v-show="表达式"
+
+##### v-if和v-show的区别
+
+- v-show 是通过css样式控制 设置display:none,v-if为false时，页面就不会渲染
+- v-if适用于：切换频率较低的场景。v-show 适用于：切换频率较高的场景。
+- v-if可以与template的配合使用 不影响界面结构（template，在渲染时会去掉，从而不影响界面结构）
+
+#### 列表渲染
+
+- v-for指令
+  - 用于展示列表数据
+  - 语法：v-for="(item, index) in xxx" :key="yyy"
+  - 可遍历：数组、对象、字符串（用的很少）、指定次数（用的很少）
+
+##### key的作用 （key的内部原理）
+
+-  虚拟DOM中key的作用
+
+  - key是虚拟DOM对象的标识，当数据发生变化时，Vue会根据【新数据】生成【新的虚拟DOM】, 随后Vue进行【新虚拟DOM】与【旧虚拟DOM】的差异比较
+
+  - 对比规则
+    - 旧虚拟DOM中找到了与新虚拟DOM相同的key
+      - 若虚拟DOM中内容没变, 直接使用之前的真实DOM
+      - 若虚拟DOM中内容变了, 则生成新的真实DOM，随后替换掉页面中之前的真实DOM
+    - 旧虚拟DOM中未找到与新虚拟DOM相同的key
+      - 创建新的真实DOM，随后渲染到到页面。
+  - 用index作为key可能会引发的问题
+    - 若对数据进行：逆序添加、逆序删除等破坏顺序操作:
+      - 会产生没有必要的真实DOM更新 ==> 界面效果没问题, 但效率低。
+    - 如果结构中还包含输入类的DOM
+      - 会产生错误DOM更新 ==> 界面有问题
+  - 如何选择key?
+    - 最好使用每条数据的唯一标识作为key, 比如id、手机号、身份证号、学号等唯一值
+    - 如果不存在对数据的逆序添加、逆序删除等破坏顺序操作，仅用于渲染列表用于展示， 使用index作为key是没有问题的。
+
