@@ -215,3 +215,37 @@ Object.defineProperty(obj2,'x',{
     - 最好使用每条数据的唯一标识作为key, 比如id、手机号、身份证号、学号等唯一值
     - 如果不存在对数据的逆序添加、逆序删除等破坏顺序操作，仅用于渲染列表用于展示， 使用index作为key是没有问题的。
 
+#### 模拟一个数据监测
+
+```
+let data = {
+  name:'尚硅谷',
+  address:'北京',
+}
+
+//创建一个监视的实例对象，用于监视data中属性的变化
+const obs = new Observer(data)		
+console.log(obs)	
+
+//准备一个vm实例对象
+let vm = {}
+vm._data = data = obs
+
+function Observer(obj){
+  //汇总对象中所有的属性形成一个数组
+  const keys = Object.keys(obj)
+  //遍历
+  keys.forEach((k)=>{
+    Object.defineProperty(this,k,{
+      get(){
+        return obj[k]
+      },
+      set(val){
+        console.log(`${k}被改了，我要去解析模板，生成虚拟DOM.....我要开始忙了`)
+        obj[k] = val
+      }
+    })
+  })
+}
+```
+
