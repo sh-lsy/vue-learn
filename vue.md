@@ -217,7 +217,7 @@ Object.defineProperty(obj2,'x',{
 
 #### 模拟一个数据监测
 
-```
+```js
 let data = {
   name:'尚硅谷',
   address:'北京',
@@ -241,7 +241,7 @@ function Observer(obj){
         return obj[k]
       },
       set(val){
-        console.log(`${k}被改了，我要去解析模板，生成虚拟DOM.....我要开始忙了`)
+        console.log(`${k}被改了，去解析模板，生成虚拟DOM`)
         obj[k] = val
       }
     })
@@ -249,3 +249,53 @@ function Observer(obj){
 }
 ```
 
+#### Vue.set() 或 vm.$set
+
+可以添加响应式数据
+
+```js
+this.$set(this.obj,key,value)
+```
+
+#### Vue监视数据的原理
+
+- vue会监视data中所有层次的数据
+- 如何检测对象中的数据：
+  - 通过setter实现监视，且要在new Vue时就传入要监测的数据。
+    - 对象中后追加的属性，Vue默认不做响应式处理
+    - 如需给后添加的属性做响应式，请使用如下API
+      - Vue.set(target，propertyName/index，value)
+      - vm.$set(target，propertyName/index，value)
+- 监测数组中的数据
+  - 通过包裹数组更新元素的方法实现，本质就是做了两件事
+    - 调用原生对应的方法对数组进行更新
+    - 重新解析模板，进而更新页面
+  - 修改数组中的某个元素一定要用如下方法
+    - 使用这些API:push()、pop()、shift()、unshift()、splice()、sort()、reverse()
+    - Vue.set() 或 vm.$set()
+- **Vue.set() 和 vm.$set() 不能给vm 或 vm的根数据对象 添加属性！！！**
+
+#### v-model 收集表单数据
+
+- <input type="text"/>，则v-model收集的是value值，用户输入的就是value值
+- <input type="radio"/>，则v-model收集的是value值，且要给标签配置value值。
+- <input type="checkbox"/>
+  - 没有配置input的value属性，那么收集的就是checked（勾选 or 未勾选，是布尔值）
+  - 配置input的value属性
+    - v-model的初始值是非数组，那么收集的就是checked（勾选 or 未勾选，是布尔值）
+    - v-model的初始值是数组，那么收集的的就是value组成的数组
+
+v-model的三个修饰符：
+
+- lazy：失去焦点再收集数据
+- number：输入字符串转为有效的数字
+- trim：输入首尾空格过滤
+
+#### 过滤器（filter）
+
+对要显示的数据进行特定格式化后再显示（适用于一些简单逻辑的处理）。
+
+- 注册过滤器：Vue.filter(name,callback) 或 new Vue{filters:{}}
+- 使用过滤器：{{ xxx | 过滤器名}}  或  v-bind:属性 = "xxx | 过滤器名"
+- 过滤器也可以接收额外参数、多个过滤器也可以串联
+- 过滤器并没有改变原本的数据, 是产生新的对应的数据
