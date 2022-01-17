@@ -358,3 +358,21 @@ v-model的三个修饰符：
 
 1.指令定义时不加v-，但使用时要加v-；
 2.指令名如果是多个单词，要使用kebab-case命名方式，不要用camelCase命名。
+
+#### 生命周期
+
+- beforeCreate
+  - 无法通过vm去访问data和methods
+- created
+  - 可以通过vm去访问data和methods，开始解析模板，页面还不能显示内容
+- beforeMount
+  - 页面呈现的是未经vue编译的的DOM结构
+  - 对dom的操作，不奏效
+- mounted
+  - 页面呈现的是vue编译的的DOM结构
+  - 对dom操作有效（尽可能避免），至此 初始化结束，一般再次开启定时器，发送网络请求等
+- beforeUpdate
+- updated
+- beforeDestroy
+- destroyed
+
