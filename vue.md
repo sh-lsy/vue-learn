@@ -498,3 +498,4 @@ v-model的三个修饰符：
 
     ​	全局混入：```Vue.mixin(xxx)```
     ​	局部混入：```mixins:['xxx']	```
+#### webStorage
