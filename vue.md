@@ -591,3 +591,74 @@ v-model的三个修饰符：
 1. 语法：```this.$nextTick(回调函数)```
 2. 作用：在下一次 DOM 更新结束后执行其指定的回调。
 3. 什么时候用：当改变数据后，要基于更新后的新DOM进行某些操作时，要在nextTick所指定的回调函数中执行。
+#### Vue封装的过度与动画
+1. 作用：在插入、更新或移除 DOM元素时，在合适的时候给元素添加样式类名。
+
+2. 写法：
+
+   1. 准备好样式：
+
+      - 元素进入的样式：
+        1. v-enter：进入的起点
+        2. v-enter-active：进入过程中
+        3. v-enter-to：进入的终点
+      - 元素离开的样式：
+        1. v-leave：离开的起点
+        2. v-leave-active：离开过程中
+        3. v-leave-to：离开的终点
+
+   2. 使用```<transition>```包裹要过度的元素，并配置name属性：
+
+      ```vue
+      <transition name="hello">
+      	<h1 v-show="isShow">你好啊！</h1>
+      </transition>
+      ```
+
+   3. 备注：若有多个元素需要过度，则需要使用：```<transition-group>```，且每个元素都要指定```key```值。
+#### vue脚手架配置代理
+- 方法一
+​	在vue.config.js中添加如下配置：
+
+```js
+devServer:{
+  proxy:"http://localhost:5000"
+}
+```
+
+说明：
+
+1. 优点：配置简单，请求资源时直接发给前端（8080）即可。
+2. 缺点：不能配置多个代理，不能灵活的控制请求是否走代理。
+3. 工作方式：若按照上述配置代理，当请求了前端不存在的资源时，那么该请求会转发给服务器 （优先匹配前端资源）
+- 方法二
+​	编写vue.config.js配置具体代理规则：
+
+```js
+module.exports = {
+	devServer: {
+      proxy: {
+      '/api1': {// 匹配所有以 '/api1'开头的请求路径
+        target: 'http://localhost:5000',// 代理目标的基础路径
+        changeOrigin: true,
+        pathRewrite: {'^/api1': ''}
+      },
+      '/api2': {// 匹配所有以 '/api2'开头的请求路径
+        target: 'http://localhost:5001',// 代理目标的基础路径
+        changeOrigin: true,
+        pathRewrite: {'^/api2': ''}
+      }
+    }
+  }
+}
+/*
+   changeOrigin设置为true时，服务器收到的请求头中的host为：localhost:5000
+   changeOrigin设置为false时，服务器收到的请求头中的host为：localhost:8080
+   changeOrigin默认值为true
+*/
+```
+
+说明：
+
+1. 优点：可以配置多个代理，且可以灵活的控制请求是否走代理。
+2. 缺点：配置略微繁琐，请求资源时必须加前缀。
